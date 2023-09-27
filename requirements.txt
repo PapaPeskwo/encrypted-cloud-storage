@@ -1,0 +1,4 @@
+pykeepass 
+mega.py 
+python-dotenv
+pycryptodome
