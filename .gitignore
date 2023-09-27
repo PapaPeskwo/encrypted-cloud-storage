@@ -161,3 +161,6 @@ cython_debug/
 
 # In case someone stores the database in the same folder
 .kdbx
+
+# Zips nein 
+*.zip
