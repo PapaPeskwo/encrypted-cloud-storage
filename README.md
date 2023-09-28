@@ -1,6 +1,6 @@
 # Encrypted Cloud Storage
 
-This Python script allows you to encrypt directories and upload them to a MEGA.nz cloud storage account. It uses a KeePass database to securely store and retrieve the encryption and MEGA account credentials.
+This Python script enables you to encrypt directories and upload them to a MEGA.nz cloud storage account. It utilizes a KeePass database to securely store and retrieve the encryption and MEGA account credentials, ensuring enhanced security for your sensitive data.
 
 ### KeePass Download:
 - [KeePassXC Download](https://keepassxc.org/download/)
@@ -36,10 +36,11 @@ pip install pykeepass pycryptodome python-dotenv mega.py
 1. Set your environment variables in a .env file in the same directory as the script. Example:
 
 ```plaintext
-FOLDERS_TO_ENCRYPT=F:\temp\test_encrypt,F:\temp\test_encrypt_2
-KEEPASS_DATABASE_PATH=F:\temp\Passwords.kdbx
+FOLDERS_TO_ENCRYPT=/path/to/folder1,/path/to/folder2
+KEEPASS_DATABASE_PATH=/path/to/keepass.kdbx
 MEGA_ENTRY_TITLE=MEGA
 ZIP_ENCRYPTION_ENTRY_TITLE=ZIP
+MEGA_DIRECTORY=path/to/folder
 ```
 
 2. Run the script:
