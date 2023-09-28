@@ -1,5 +1,6 @@
 import os
 import shutil
+import tempfile
 from dotenv import load_dotenv
 from pykeepass import PyKeePass
 from Crypto.Cipher import AES
@@ -53,41 +54,33 @@ def encrypt_and_upload():
     mega_email = mega_entry.username
     mega_password = mega_entry.password
 
-    for index, folder in enumerate(folders_to_encrypt, start=1):
-        current_date = datetime.now().strftime("%y%m%d")
-        zip_name = os.path.basename(folder) + f"_{current_date}"  
-        zip_path = os.path.join(os.getcwd(), zip_name)
-        shutil.make_archive(zip_path, 'zip', folder)
-        encrypt_file(f"{zip_path}.zip", zip_encryption_key, f"encrypted_{zip_name}.zip")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    with tempfile.TemporaryDirectory(dir=script_dir) as tempdir:
+        for index, folder in enumerate(folders_to_encrypt, start=1):
+            current_date = datetime.now().strftime("%y%m%d")
+            zip_name = os.path.basename(folder) + f"_{current_date}"
+            zip_path = os.path.join(tempdir, zip_name)
+            shutil.make_archive(zip_path, 'zip', folder)
+            encrypt_file(f"{zip_path}.zip", zip_encryption_key, f"{tempdir}/encrypted_{zip_name}.zip")
 
-        mega = Mega()
-        m = mega.login(mega_email, mega_password)
+            mega = Mega()
+            m = mega.login(mega_email, mega_password)
 
-        mega_directory = os.getenv('MEGA_DIRECTORY')
-        if mega_directory:
-            print(f"Uploading to {mega_directory}")
-        else:
-            directory = input(f"Enter the MEGA directory to upload file {index} to, or press Enter to upload to the main directory: ")
-            if directory:
-                folder = m.find(directory)
+            mega_directory = os.getenv('MEGA_DIRECTORY')
+            if mega_directory:
+                print(f"Uploading to {mega_directory}")
+                folder = m.find(mega_directory, exclude_deleted=True)
                 if folder:
-                    m.upload(f"encrypted_{zip_name}.zip", folder[0])
-                    print(f"Encrypted file uploaded to {directory}")
+                    m.upload(f"{tempdir}/encrypted_{zip_name}.zip", folder[0])
+                    print(f"Encrypted file uploaded to {mega_directory}")
                 else:
-                    print(f"Folder does not exist. Do you want to:")
-                    print("1. Upload to main directory")
-                    print("2. Try again")
-                    choice = input("Enter your choice (1/2): ")
-                    if choice == '1':
-                        m.upload(f"encrypted_{zip_name}.zip")
-                        print(f"Encrypted file uploaded to main directory.")
-                    else:
-                        continue
+                    print(f"Folder {mega_directory} does not exist. Uploading to main directory.")
+                    m.upload(f"{tempdir}/encrypted_{zip_name}.zip")
             else:
-                m.upload(f"encrypted_{zip_name}.zip")
+                m.upload(f"{tempdir}/encrypted_{zip_name}.zip")
                 print(f"Encrypted file uploaded to main directory.")
-        print(f"Encrypted file at: encrypted_{zip_name}.zip")
-        input("Press enter to continue")
+            print(f"Encrypted file at: {tempdir}/encrypted_{zip_name}.zip")
+            input("Press enter to continue")
     clear()
 
 
