@@ -9,6 +9,22 @@ from Crypto.Random import get_random_bytes
 from mega import Mega
 from getpass import getpass
 from datetime import datetime
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+
+
+def authenticate_google_drive():
+    gauth = GoogleAuth()
+    gauth.LocalWebserverAuth()
+    return GoogleDrive(gauth)
+
+
+def upload_to_google_drive(file_path, folder_name=None):
+    drive = authenticate_google_drive()
+    file = drive.CreateFile({'title': os.path.basename(file_path)})
+    file.SetContentFile(file_path)
+    file.Upload()
+    print(f"File uploaded to Google Drive with ID {file['id']}")
 
 
 def clear():
@@ -63,24 +79,33 @@ def encrypt_and_upload():
             shutil.make_archive(zip_path, 'zip', folder)
             encrypt_file(f"{zip_path}.zip", zip_encryption_key, f"{tempdir}/encrypted_{zip_name}.zip")
 
-            mega = Mega()
-            m = mega.login(mega_email, mega_password)
+            print("1. Upload to MEGA")
+            print("2. Upload to Google Drive")
+            choice = input("Enter your choice: ")  
 
-            mega_directory = os.getenv('MEGA_DIRECTORY')
-            if mega_directory:
-                print(f"Uploading to {mega_directory}")
-                folder = m.find(mega_directory, exclude_deleted=True)
-                if folder:
-                    m.upload(f"{tempdir}/encrypted_{zip_name}.zip", folder[0])
-                    print(f"Encrypted file uploaded to {mega_directory}")
+            if choice == '1': 
+                mega = Mega()
+                m = mega.login(mega_email, mega_password)
+
+                mega_directory = os.getenv('MEGA_DIRECTORY')
+                if mega_directory:
+                    print(f"Uploading to {mega_directory}")
+                    folder = m.find(mega_directory, exclude_deleted=True)
+                    if folder:
+                        m.upload(f"{tempdir}/encrypted_{zip_name}.zip", folder[0])
+                        print(f"Encrypted file uploaded to {mega_directory}")
+                    else:
+                        print(f"Folder {mega_directory} does not exist. Uploading to main directory.")
+                        m.upload(f"{tempdir}/encrypted_{zip_name}.zip")
                 else:
-                    print(f"Folder {mega_directory} does not exist. Uploading to main directory.")
                     m.upload(f"{tempdir}/encrypted_{zip_name}.zip")
+                    print(f"Encrypted file uploaded to main directory.")
+                print(f"Encrypted file at: {tempdir}/encrypted_{zip_name}.zip")
+                input("Press enter to continue")
+            elif choice == '2':
+                upload_to_google_drive(f"{tempdir}/encrypted_{zip_name}.zip")
             else:
-                m.upload(f"{tempdir}/encrypted_{zip_name}.zip")
-                print(f"Encrypted file uploaded to main directory.")
-            print(f"Encrypted file at: {tempdir}/encrypted_{zip_name}.zip")
-            input("Press enter to continue")
+                print("Invalid choice.")
     clear()
 
 
