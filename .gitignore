@@ -163,4 +163,7 @@ cython_debug/
 .kdbx
 
 # Zips nein 
-*.zip
+.zip
+
+# To ignore downloaded G-Drive credentials
+.json
