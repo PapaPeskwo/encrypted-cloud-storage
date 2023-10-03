@@ -14,6 +14,7 @@ from pydrive.drive import GoogleDrive
 
 
 def authenticate_google_drive():
+    google_drive_credentials_path = os.getenv('GOOGLE_DRIVE_CREDENTIALS_PATH')
     gauth = GoogleAuth()
     gauth.LocalWebserverAuth()
     return GoogleDrive(gauth)
