@@ -1,6 +1,6 @@
 # Encrypted Cloud Storage
 
-This Python script enables you to encrypt directories and upload them to a MEGA.nz cloud storage account. It utilizes a KeePass database to securely store and retrieve the encryption and MEGA account credentials, ensuring enhanced security for your sensitive data.
+This Python script enables you to encrypt directories and upload them to either a MEGA.nz cloud storage account or Google Drive. It utilizes a KeePass database to securely store and retrieve the encryption and account credentials, ensuring enhanced security for your sensitive data.
 
 ### KeePass Download:
 - [KeePassXC Download](https://keepassxc.org/download/)
@@ -8,27 +8,25 @@ This Python script enables you to encrypt directories and upload them to a MEGA.
 
 ## Features
 
-- Encrypt directories and upload them to MEGA.nz cloud storage.
+- Encrypt directories and upload them to MEGA.nz or Google Drive cloud storage.
 - Option to decrypt the files back from the cloud.
 - Directory paths and KeePass database paths can be entered manually if not set in .env file.
-- Allows user to upload to a specific folder in MEGA.nz cloud storage.
+- Allows user to upload to a specific folder in MEGA.nz or Google Drive cloud storage.
 
 ## Prerequisites
 
 Ensure you have the following Python libraries installed:
-- pykeepass
-- Crypto
+
+- pykeepass 
+- mega.py 
 - python-dotenv
-- mega.py
+- pycryptodome
+- PyDrive
 
 You can install them using:
 
 ```bash
 pip install -r requirements.txt
-```
-or:
-```bash
-pip install pykeepass pycryptodome python-dotenv mega.py
 ```
 
 ## Usage
@@ -41,6 +39,7 @@ KEEPASS_DATABASE_PATH=/path/to/keepass.kdbx
 MEGA_ENTRY_TITLE=MEGA
 ZIP_ENCRYPTION_ENTRY_TITLE=ZIP
 MEGA_DIRECTORY=path/to/folder
+GOOGLE_DRIVE_CREDENTIALS_PATH=path/to/your/client_secrets.json
 ```
 
 2. Run the script:
@@ -49,13 +48,14 @@ MEGA_DIRECTORY=path/to/folder
 python encrypted_cloud_storage.py
 ```
 
-3. Follow the on-screen prompts to encrypt and upload, or decrypt your directories.
+3.Follow the on-screen prompts to encrypt and upload, or decrypt your directories.
 
 ### Encrypt and Upload:
 
 - Enter 1 to choose the Encrypt and Upload option.
 - Enter your KeePass password when prompted.
-- Enter the MEGA directory to upload to or press Enter to upload to the main directory.
+- Choose the cloud storage option (MEGA.nz or Google Drive).
+- Enter the directory to upload to or press Enter to upload to the main directory.
 - The script will inform you about the encryption and upload status.
 
 ### Decrypt:
@@ -65,18 +65,40 @@ python encrypted_cloud_storage.py
 - Enter the path of the file to decrypt and the output path and filename.
 - The script will inform you about the decryption status.
 
-#### Exit:
+### Exit:
 
 - Enter 3 to exit the script.
 
+## Setting Up Google Drive with OAuth
+
+To set up Google Drive integration, follow these steps:
+
+1. Google Cloud Console: Start by creating a project in the Google Cloud Console. Once the project is created, navigate to the OAuth consent screen.
+
+2. OAuth Consent:
+    - Click on "OAuth consent".
+    - Fill in the required fields.
+    - Click "Save and Continue".
+
+3. Scopes:
+    - On the next screen, click on "Add or remove scopes".
+    - Add the scope: https://www.googleapis.com/auth/drive.file.
+    - Click "Save and Continue".
+
+4. Note: If you encounter a "Not verified" warning during this process:
+    - Click on "Advanced".
+    - Proceed by clicking on "Continue".
+
+5. Follow the rest of the OAuth setup process to generate your credentials file.
+
 ## Note
 
-- If you are using paths in the script, make sure to use double backslashes (\\) or single forward slashes (/) to avoid errors, e.g., F:\\temp\\test_encrypt or F:/temp/test_encrypt.
+- If you are using paths in the script, make sure to use double backslashes (\) or single forward slashes (/) to avoid errors, e.g., F:\temp\test_encrypt or F:/temp/test_encrypt.
 
 ## Troubleshooting
 
 - Ensure your .env file is correctly configured with the appropriate paths and titles.
 - Ensure your Python environment has the necessary libraries installed.
-- Check your internet connection as the script requires access to MEGA.nz for uploading and downloading files.
+- Check your internet connection as the script requires access to MEGA.nz or Google Drive for uploading and downloading files.
 
 If you encounter any issues or have suggestions for improvement, feel free to open an issue or make a pull request :))))
