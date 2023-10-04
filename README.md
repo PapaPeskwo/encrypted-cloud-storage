@@ -71,7 +71,8 @@ python encrypted_cloud_storage.py
 
 ## Setting Up Google Drive with OAuth
 
-To set up Google Drive integration, follow these steps:
+Watch this video: https://youtu.be/bkZns_VOB6I?si=yRmqiN9Z90ewF6nV&t=91
+or follow these steps:
 
 1. Google Cloud Console: Start by creating a project in the Google Cloud Console. Once the project is created, navigate to the OAuth consent screen.
 
