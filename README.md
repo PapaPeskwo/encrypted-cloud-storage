@@ -82,23 +82,31 @@ python encrypted_cloud_storage.py -i
 Watch this video: https://youtu.be/bkZns_VOB6I?si=yRmqiN9Z90ewF6nV&t=91
 or follow these steps:
 
-1. Google Cloud Console: Start by creating a project in the Google Cloud Console. Once the project is created, navigate to the OAuth consent screen.
+1. Google Cloud Console: Start by creating a project in the Google Cloud Console.
 
-2. OAuth Consent:
+2. Enable Google Drive API:
+    - In the left-hand sidebar, navigate to the API & Services > Library.
+    - Search for "Google Drive API" and select it.
+    - Click "Enable".
+
+3. OAuth Consent:
+    - Once the API is enabled, navigate to the OAuth consent screen.
     - Click on "OAuth consent".
     - Fill in the required fields.
     - Click "Save and Continue".
 
-3. Scopes:
+4. Scopes:
     - On the next screen, click on "Add or remove scopes".
     - Add the scope: https://www.googleapis.com/auth/drive.file.
     - Click "Save and Continue".
 
-4. Note: If you encounter a "Not verified" warning during this process:
-    - Click on "Advanced".
-    - Proceed by clicking on "Continue".
+5. Not Verified Warning:
+    - If you encounter a "Not verified" warning during this process:
+        - Click on "Advanced".
+        - Proceed by clicking on "Continue".
 
-5. Follow the rest of the OAuth setup process to generate your credentials file.
+6. Generate Credentials:
+    - Follow the rest of the OAuth setup process to generate your credentials file.
 
 ## Note
 
