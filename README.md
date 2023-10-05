@@ -50,6 +50,14 @@ python encrypted_cloud_storage.py
 
 3.Follow the on-screen prompts to encrypt and upload, or decrypt your directories.
 
+### Flags
+The script can be ran with the `-i` flag to ignore the .env file and let the user manually enter everything that's needed.
+
+#### Usage
+```bash
+python encrypted_cloud_storage.py -i
+```
+
 ### Encrypt and Upload:
 
 - Enter 1 to choose the Encrypt and Upload option.
