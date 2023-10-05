@@ -13,6 +13,7 @@ from datetime import datetime
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from tkinter import Tk, filedialog
+import argparse
 
 
 def authenticate_google_drive():
@@ -204,13 +205,63 @@ def get_folders_to_encrypt():
         return folders.split(',')
 
 
-def main():
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Encrypted Cloud Storage script options")
+    parser.add_argument('-i', '--ignore', action="store_true", help="Ignore .env file and input parameters manually")
+    args = parser.parse_args()
+    return args
+
+
+def no_env_file():
     clear()
-    load_dotenv()
+
+    args = parse_arguments()
+
+    if not args.ignore:
+        load_dotenv()
+
     global keepass_db_path, mega_entry_title, zip_encryption_entry_title
-    keepass_db_path = get_keepass_db_path()
-    mega_entry_title = os.getenv('MEGA_ENTRY_TITLE')
-    zip_encryption_entry_title = os.getenv('ZIP_ENCRYPTION_ENTRY_TITLE')
+
+    if args.ignore or not os.getenv('KEEPASS_DATABASE_PATH'):
+        keepass_db_path = input("Enter path to KeePass database: ")
+    else:
+        keepass_db_path = os.getenv('KEEPASS_DATABASE_PATH')
+
+    if args.ignore or not os.getenv('MEGA_ENTRY_TITLE'):
+        mega_entry_title = input("Enter MEGA entry title: ")
+    else:
+        mega_entry_title = os.getenv('MEGA_ENTRY_TITLE')
+
+    if args.ignore or not os.getenv('ZIP_ENCRYPTION_ENTRY_TITLE'):
+        zip_encryption_entry_title = input("Enter ZIP encryption entry title: ")
+    else:
+        zip_encryption_entry_title = os.getenv('ZIP_ENCRYPTION_ENTRY_TITLE')
+
+
+def main_menu():
+    clear()
+
+    args = parse_arguments()
+    
+    if not args.ignore:
+        load_dotenv()
+
+    global keepass_db_path, mega_entry_title, zip_encryption_entry_title # saved to memore for the lifetime of the script
+
+    if args.ignore or not os.getenv('KEEPASS_DATABASE_PATH'):
+        keepass_db_path = input("Enter path to KeePass database: ")
+    else:
+        keepass_db_path = os.getenv('KEEPASS_DATABASE_PATH')
+
+    if args.ignore or not os.getenv('MEGA_ENTRY_TITLE'):
+        mega_entry_title = input("Enter MEGA entry title: ")
+    else:
+        mega_entry_title = os.getenv('MEGA_ENTRY_TITLE')
+
+    if args.ignore or not os.getenv('ZIP_ENCRYPTION_ENTRY_TITLE'):
+        zip_encryption_entry_title = input("Enter ZIP encryption entry title: ")
+    else:
+        zip_encryption_entry_title = os.getenv('ZIP_ENCRYPTION_ENTRY_TITLE')
 
     while True:
         print("1. Encrypt and Upload")
@@ -237,4 +288,5 @@ def get_keepass_db_path():
 
 
 if __name__ == '__main__':
-    main()
+    no_env_file()
+    main_menu()
